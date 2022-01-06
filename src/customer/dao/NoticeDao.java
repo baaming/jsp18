@@ -1,6 +1,7 @@
 package customer.dao;
 
 import java.sql.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,4 +46,48 @@ public class NoticeDao {
 
 		return list;
 	}
+	
+	public Notice getNotice(String seq, String hit) throws Exception { // 글번호에 맞는 Notice를 리턴받기
+		int hNum=Integer.parseInt(hit);
+		
+		// hit update 함수로 처리
+		// hitupdate(seq,hNum);
+		
+		String sql = "SELECT * FROM notices WHERE seq=" + seq;
+
+		/*// dbcon (noticeDetail.jsp에서 가져온 내용)
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+
+		String url = "jdbc:oracle:thin:@localhost:1521:xe";
+		String user = "hr";
+		String pw = "123456";
+		Connection con = DriverManager.getConnection(url, user, pw);*/
+		
+		Connection con=DBCon.getConnection();
+
+		// 실행
+		Statement st = con.createStatement();
+
+		// 결과
+		ResultSet rs = st.executeQuery(sql);
+
+		rs.next();
+
+		// Notice에 select 결과물 담아보기
+		Notice n = new Notice();
+		n.setSeq(rs.getString("seq")); // DB에가 가져온 rs의 seq를 가져와서 Notice에 담기
+		n.setWriter(rs.getString("writer"));
+		n.setTitle(rs.getString("title"));
+		n.setContent(rs.getString("content"));
+		n.setRegdate(rs.getDate("regdate"));
+		n.setHit(rs.getInt("hit"));
+		n.setFilesrc(rs.getString("filesrc"));
+
+		rs.close();
+		st.close();
+		con.close();
+
+		return n; // n에 데이터를 다 입력받은 후 Notice타입인 n을 리턴
+	}
+	
 }
