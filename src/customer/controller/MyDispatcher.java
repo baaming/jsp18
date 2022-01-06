@@ -31,6 +31,7 @@ public class MyDispatcher extends HttpServlet{
 			if (com.equals("/customer/notice.do")){
 				controller=new NoticeController();
 			}
+			
 			controller.execute(request,response);
 		} catch (Exception e) {
 			
